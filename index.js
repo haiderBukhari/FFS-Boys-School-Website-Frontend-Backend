@@ -4,6 +4,7 @@ import morgan from "morgan"
 import ContactRoutes from "./Routes/contactRoutes.js"
 import RegisterationRoutes from "./Routes/RegisterationRoutes.js"
 import LoginRoutes from "./Routes/LoginRoutes.js"
+import FacultyModel from "./Model/FacultyMaterialModel.js";
 
 const app = express()
 app.use(express.json())
@@ -16,5 +17,6 @@ app.use(cors({
 app.use('/contact', ContactRoutes);
 app.use('/register', RegisterationRoutes);
 app.use('/login', LoginRoutes);
+app.use('/faculty', FacultyModel);
 
 export default app;

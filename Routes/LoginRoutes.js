@@ -1,5 +1,5 @@
 import express from "express";
-import {LoginFaculty} from "../Controller/RegsiterationController.js";
+import {LoginFaculty} from "../Controller/RegisterationController.js";
 
 const LoginRoutes = express.Router();
 

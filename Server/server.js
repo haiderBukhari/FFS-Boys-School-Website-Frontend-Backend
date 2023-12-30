@@ -6,7 +6,9 @@ configDotenv();
 
 const PORT = process.env.PORT || 3008;
 
-connectDB();
-app.listen(PORT, ()=>{
-    console.log(`Server Started at ${PORT}`);
-})
+(function(){
+    connectDB();
+    app.listen(PORT, ()=>{
+        console.log(`Server Started at ${PORT}`);
+    })
+})()

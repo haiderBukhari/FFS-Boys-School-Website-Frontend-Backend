@@ -1,7 +1,11 @@
 import RegisterationModel from "../Model/RegisterationModel.js";
+import jwt from "jsonwebtoken";
 import crypto from "crypto"
+import {configDotenv} from "dotenv";
+configDotenv();
+
 const algorithm = 'aes-256-cbc';
-const secret = process.env.ENCRYPTION_SECRET || "";
+const secret = process.env.ENCRYPTION_SECRET;
 
 const key = crypto.scryptSync(secret, 'salt', 32);
 const iv = Buffer.alloc(16, 0);
@@ -41,19 +45,24 @@ export const AddFaculty = async (req, res) => {
 
 export const LoginFaculty = async (req, res) => {
 	const body = req.body;
-	try{
-		console.log(body);
-		const data = await RegisterationModel.findOne({email: body.email});
-		if(!data)throw new Error('');
-		if(decrypt(data.password) !== req.body.password)throw new Error('');
-		res.status(200).json({
+	try {
+		const data = await RegisterationModel.findOne({ email: body.email });
+		if (!data) {
+			throw new Error('User not found');
+		}
+		if(req.body.password !== decrypt(data.password)){
+			throw new Error('Password does not match');
+		}
+		const token = jwt.sign({ data }, secret);
+		return res.status(200).json({
 			status: "success",
-			data
-		})
-	}catch(err){
-		res.status(404).json({
+			data,
+			token: token
+		});
+	} catch (err) {
+		return res.status(404).json({
 			status: "error",
-			message: "Not Authenticated"
-		})
+			message: err.message
+		});
 	}
 }
