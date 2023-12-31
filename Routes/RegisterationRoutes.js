@@ -1,8 +1,8 @@
 import express from "express";
-import {AddFaculty} from "../Controller/RegisterationController.js";
+import {AddFaculty, GetAllRegisteredFaculty} from "../Controller/RegisterationController.js";
 
 const RegisterationRoutes = express.Router();
 
-RegisterationRoutes.route('/').post(AddFaculty)
+RegisterationRoutes.route('/').post(AddFaculty).get(GetAllRegisteredFaculty);
 
 export default RegisterationRoutes;

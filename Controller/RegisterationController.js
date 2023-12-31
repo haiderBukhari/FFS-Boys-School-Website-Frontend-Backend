@@ -66,3 +66,42 @@ export const LoginFaculty = async (req, res) => {
 		});
 	}
 }
+export const GetAllRegisteredFaculty = async (req, res) => {
+	const data = await RegisterationModel.find({ email: { $ne: 'admin@gmail.com' } });
+	try{
+		res.status(200).json({
+			status: "success",
+			data
+		})
+	}catch(err){
+		res.status(404).json({
+			status: "error",
+			error: err.message
+		})
+	}
+}
+
+export const getAllFacultyByClassandSubject = async (req, res) => {
+	const desiredClass = req.query.class;
+	const desiredSubject = req.query.subject;
+	console.log(desiredSubject, desiredClass)
+	const data = await RegisterationModel.find({
+		'assignedClasses.class': desiredClass,
+		'assignedClasses.subjects': {
+			$elemMatch: {
+				$regex: new RegExp(desiredSubject, 'i')
+			}
+		}
+	}, {name: 1, title: 1, _id: 1});
+	try{
+		res.status(200).json({
+			status: "success",
+			data
+		})
+	}catch(e){
+		res.status(404).json({
+			status: "error",
+			error: e.message
+		})
+	}
+}
