@@ -1,9 +1,6 @@
 import mongoose from 'mongoose';
 
 const FacultyMaterialSchema = new mongoose.Schema({
-	title: String,
-	description: String,
-	link: String,
 	subject: {
 		type: String,
 		index: true
@@ -15,9 +12,21 @@ const FacultyMaterialSchema = new mongoose.Schema({
 	facultyId: {
 		type: mongoose.Schema.Types.ObjectId,
 		index: true,
-	}
+	},
+	link: [
+		{
+			title: String,
+			link: String,
+			description: String,
+			isDriveData: Boolean,
+			uploadedDate: {
+				type: Date,
+				default: Date.now,
+			},
+		}
+	]
 })
 
-const FacultyMaterialsModel = mongoose.model('FacultyMaterial', FcaultyMaterialSchema)
+const FacultyMaterialsModel = mongoose.model('FacultyMaterial', FacultyMaterialSchema)
 
 export default FacultyMaterialsModel;

@@ -1,7 +1,8 @@
 import express from "express";
-import {FacultyAuthVerification} from "../Controller/AuthChecker.js";
+import {GetFacultyMaterials, UploadFacultyMaterials} from "../Controller/FacultyMaterialController.js";
+import {FacultyUploadVerification} from "../Middlewares/AuthVerification.js";
 
 const FacultyModel = express.Router();
 
-FacultyModel.route('/').get(FacultyAuthVerification);
+FacultyModel.route('/').post(FacultyUploadVerification, UploadFacultyMaterials).get(GetFacultyMaterials);
 export default FacultyModel;

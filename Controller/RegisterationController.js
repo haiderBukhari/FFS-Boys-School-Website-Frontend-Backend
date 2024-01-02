@@ -27,8 +27,12 @@ function decrypt(string){
 
 export const AddFaculty = async (req, res) => {
 	const password = encrypt(req.body.password);
-	const body = {...req.body, password: password};
+	const assignedClasses = req.body.assignedClasses.map((assignment) => ({
+		class: assignment.class,
+		subjects: assignment.subjects.map((subject) => subject.toLowerCase()),
+	}));
 
+	const body = {...req.body, password: password, assignedClasses:assignedClasses};
 	try{
 		const data = await RegisterationModel.create(body);
 		res.status(200).json({
@@ -83,8 +87,7 @@ export const GetAllRegisteredFaculty = async (req, res) => {
 
 export const getAllFacultyByClassandSubject = async (req, res) => {
 	const desiredClass = req.query.class;
-	const desiredSubject = req.query.subject;
-	console.log(desiredSubject, desiredClass)
+	const desiredSubject = req.query.subject.toLowerCase();
 	const data = await RegisterationModel.find({
 		'assignedClasses.class': desiredClass,
 		'assignedClasses.subjects': {
@@ -93,6 +96,7 @@ export const getAllFacultyByClassandSubject = async (req, res) => {
 			}
 		}
 	}, {name: 1, title: 1, _id: 1});
+	console.log(data)
 	try{
 		res.status(200).json({
 			status: "success",

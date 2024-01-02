@@ -7,6 +7,7 @@ import LoginRoutes from "./Routes/LoginRoutes.js"
 import FacultyModel from "./Routes/FacultyMaterialRoutes.js";
 import FacultyRoutes from "./Routes/FacultyRoutes.js";
 import {AddRating} from "./Controller/FeedbackController.js";
+import axios from "axios"
 
 const app = express()
 app.use(express.json())
@@ -22,5 +23,4 @@ app.use('/login', LoginRoutes);
 app.use('/faculty', FacultyModel);
 app.use('/getFaculty', FacultyRoutes);
 app.post('/feedback', AddRating);
-
 export default app;
