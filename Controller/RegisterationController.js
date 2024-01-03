@@ -1,6 +1,7 @@
 import RegisterationModel from "../Model/RegisterationModel.js";
 import jwt from "jsonwebtoken";
 import crypto from "crypto"
+import {SendEmail} from "../utils/SendEmail.js"
 import {configDotenv} from "dotenv";
 configDotenv();
 
@@ -26,13 +27,10 @@ function decrypt(string){
 
 
 export const AddFaculty = async (req, res) => {
-	const password = encrypt(req.body.password);
-	const assignedClasses = req.body.assignedClasses.map((assignment) => ({
-		class: assignment.class,
-		subjects: assignment.subjects.map((subject) => subject.toLowerCase()),
-	}));
-
-	const body = {...req.body, password: password, assignedClasses:assignedClasses};
+	const temppassword = Math.floor(Math.random()*1873637 +40000) .toString();
+	SendEmail(req.body.email, temppassword, req.body.name);
+	const password = encrypt(temppassword);
+	const body = {...req.body, password: password};
 	try{
 		const data = await RegisterationModel.create(body);
 		res.status(200).json({
@@ -106,6 +104,56 @@ export const getAllFacultyByClassandSubject = async (req, res) => {
 		res.status(404).json({
 			status: "error",
 			error: e.message
+		})
+	}
+}
+
+export const UpdateFaculty = async (req,res) => {
+	try {
+		const data = await RegisterationModel.findById(req.body.id);
+		if (!data) {
+			return res.status(404).json({ message: 'Faculty member not found' });
+		}
+		const {password, contactNumber, assignedClasses} = req.body;
+		if(password){
+			data.password = encrypt(password);
+			data.isPasswordChanged = true;
+		}
+		if(contactNumber && assignedClasses){
+			data.contactNumber = contactNumber;
+			const assignedClassesNew = assignedClasses.map((assignment) => ({
+				class: assignment.class,
+				subjects: assignment.subjects.map((subject) => subject.toLowerCase()),
+			}));
+			data.assignedClasses = assignedClassesNew;
+			data.isUserInfoChanged = true
+		}
+		await data.save();
+		return res.status(200).json({
+			status: 'success',
+			data
+		});
+	} catch (error) {
+		return res.status(404).json({
+			status: "error",
+			error: error.message
+		});
+	}
+
+}
+
+export const GetFacultyById = async (req, res) => {
+	const id = req.params.id;
+	const data = await RegisterationModel.findById(id);
+	try{
+		res.status(200).json({
+			status: "success",
+			data
+		})
+	}catch(err){
+		res.status(404).json({
+			status: "error",
+			error: err.message
 		})
 	}
 }

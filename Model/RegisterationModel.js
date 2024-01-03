@@ -10,6 +10,14 @@ const RegisterationScheme = new mongoose.Schema({
 	},
 	password: String,
 	contactNumber: String,
+	isPasswordChanged: {
+		type:Boolean,
+		default: false
+	},
+	isUserInfoChanged: {
+		type:Boolean,
+		default: false
+	},
 	assignedClasses: [
 		{
 			"class": String,

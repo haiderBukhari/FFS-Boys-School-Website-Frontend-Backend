@@ -13,11 +13,13 @@ export const UploadFacultyMaterials = async (req, res) => {
 				subject: req.body.subject.toLowerCase(),
 				class: req.body.class,
 				facultyId: req.body.facultyId,
+				name: req.body.name,
 				link: [{
 					title: req.body.title,
 					link: req.body.link,
 					description: req.body.description,
-					isDriveData: req.body.isDriveData
+					isDriveData: req.body.isDriveData,
+					uploadedDate: Date.now()
 				}]
 			});
 			return res.status(200).json({
@@ -30,7 +32,8 @@ export const UploadFacultyMaterials = async (req, res) => {
 			title: req.body.title,
 			link: req.body.link,
 			description: req.body.description,
-			isDriveData: req.body.isDriveData
+			isDriveData: req.body.isDriveData,
+			uploadedDate: Date.now()
 		});
 
 		await FacultyMaterialsModel.updateOne({
@@ -53,36 +56,57 @@ export const UploadFacultyMaterials = async (req, res) => {
 };
 
 export const GetFacultyMaterials = async (req, res) => {
+	const query = req.query.find || "";
+	const page = parseInt(req.query.page) || 1;
+	const pageSize = parseInt(req.query.pageSize) || 10;
+
 	if (!mongoose.Types.ObjectId.isValid(req.query.facultyId)) {
 		return res.status(400).json({
 			status: 'error',
 			error: 'Invalid faculty id',
 		});
 	}
+
 	const FacultyData = await FacultyMaterialsModel.findOne({
 		facultyId: req.query.facultyId,
 		subject: req.query.subject.toLowerCase(),
 		class: req.query.class
 	});
-	try{
+
+	try {
 		if (!FacultyData) {
-			const verifyRegisteration = await RegisterationModel.findOne({
+			const verifyRegistration = await RegisterationModel.findOne({
 				facultyId: req.query.facultyId
 			})
-			if(!verifyRegisteration){
+			if (!verifyRegistration) {
 				throw new Error("No Data Uploaded By Faculty Yet!");
 			}
 			throw new Error("Faculty Not Registered");
 		}
+
+		const Links = FacultyData.link.filter((Item => {
+			return Item.title.toLowerCase().includes(query.toLowerCase()) || Item.description.toLowerCase().includes(query.toLowerCase());
+		}));
+
+		if (!Links.length) {
+			throw new Error("No Data Found");
+		}
+
+		// Implement pagination
+		const startIndex = (page - 1) * pageSize;
+		const endIndex = page * pageSize;
+		const paginatedLinks = Links.slice(startIndex, endIndex);
+
+		FacultyData.link = paginatedLinks;
+
 		res.status(200).json({
 			status: "success",
 			FacultyData
 		});
-	}catch(err){
+	} catch (err) {
 		res.status(404).json({
 			status: "error",
 			error: err.message
 		})
 	}
-
 }
