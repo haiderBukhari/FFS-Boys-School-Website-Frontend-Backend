@@ -28,11 +28,11 @@ function decrypt(string){
 
 export const AddFaculty = async (req, res) => {
 	const temppassword = Math.floor(Math.random()*1873637 +40000) .toString();
-	SendEmail(req.body.email, temppassword, req.body.name);
 	const password = encrypt(temppassword);
 	const body = {...req.body, password: password};
 	try{
 		const data = await RegisterationModel.create(body);
+		SendEmail(req.body.email, temppassword, req.body.name);
 		res.status(200).json({
 			status: "success",
 			data
@@ -157,3 +157,4 @@ export const GetFacultyById = async (req, res) => {
 		})
 	}
 }
+
