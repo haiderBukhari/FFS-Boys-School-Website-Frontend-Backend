@@ -31,7 +31,7 @@ export const SendEmail = (facultyemail, password, name) => {
 	const email = {
 		body: {
 			name: name,
-			intro: `Your credential has been added to our System. Keep your credentials safe!<br><br>Email: ${facultyemail}<br>Password: ${password}`,
+			intro: `Your credential has been added to our System. Keep your credentials safe!<br><br>Email: ${facultyemail}<br>Password: ${password}. <br><br> There is Feedback in the system! your fedback there can help to optimize the website and any thing which in your point will really appreciated. <br> Note:  Feedback in completely anonymous. <br><br>`,
 			action: {
 				instructions: 'Please click the button below to Login to your account:',
 				button: {
@@ -40,7 +40,7 @@ export const SendEmail = (facultyemail, password, name) => {
 					link: 'https://www.ffsboyswah.com/login',
 				},
 			},
-			outro: 'If you need any help or have questions, please reach out to us at email (principal@ffsboyswah.com). We\'d love to help.<br>Secondly, a YouTube video is attached to complete the onboarding process <a href="https://youtube.com">https://youtube.com</a>.',
+			outro: 'If you need any help or have questions, please reach out to us at email (principal@ffsboyswah.com). We\'d love to help.<br>Secondly, a YouTube video is attached to complete the onboarding process <a href="https://www.youtube.com/watch?v=SumpypYEV60">https://www.youtube.com/watch?v=SumpypYEV60</a>.',
 		},
 	};
 

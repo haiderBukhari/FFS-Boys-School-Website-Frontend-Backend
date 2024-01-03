@@ -14,6 +14,7 @@ export const UploadFacultyMaterials = async (req, res) => {
 				class: req.body.class,
 				facultyId: req.body.facultyId,
 				name: req.body.name,
+				Facultytitle: req.body.Facultytitle,
 				link: [{
 					title: req.body.title,
 					link: req.body.link,

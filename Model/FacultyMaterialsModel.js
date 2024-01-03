@@ -10,6 +10,7 @@ const FacultyMaterialSchema = new mongoose.Schema({
 		index: true
 	},
 	name: String,
+	Facultytitle: String,
 	facultyId: {
 		type: mongoose.Schema.Types.ObjectId,
 		index: true,
