@@ -80,7 +80,7 @@ export const GetFacultyMaterials = async (req, res) => {
 				facultyId: req.query.facultyId
 			})
 			if (!verifyRegistration) {
-				throw new Error("No Data Uploaded By Faculty Yet!");
+				throw new Error("No Material Uploaded By Faculty Yet!");
 			}
 			throw new Error("Faculty Not Registered");
 		}
@@ -111,3 +111,58 @@ export const GetFacultyMaterials = async (req, res) => {
 		})
 	}
 }
+
+// Delete Faculty Materials Link
+export const DeleteFacultyMaterials = async (req, res) => {
+	try {
+		const facultyId = req.params.facultyId;
+		const subject = req.params.subject.toLowerCase();
+		const classValue = req.params.class;
+		const linkIdToDelete = req.params.linkId;
+
+		const FacultyData = await FacultyMaterialsModel.findOne({
+			facultyId,
+			subject,
+			class: classValue
+		});
+
+		if (!FacultyData) {
+			return res.status(404).json({
+				status: "error",
+				error: "Faculty Materials not found"
+			});
+		}
+
+		const linkIndexToDelete = FacultyData.link.findIndex(link => link._id.equals(linkIdToDelete));
+
+		if (linkIndexToDelete === -1) {
+			return res.status(404).json({
+				status: "error",
+				error: "Link not found"
+			});
+		}
+		FacultyData.link.splice(linkIndexToDelete, 1);
+
+		if(FacultyData.link.length === 0){
+			await FacultyMaterialsModel.deleteOne({
+				facultyId,
+				subject,
+				class: classValue
+			})
+			return res.status(200).json({
+				status:"success"
+			})
+		}
+
+		await FacultyData.save();
+
+		res.status(200).json({
+			status: "Deleted",
+		});
+	} catch (err) {
+		res.status(500).json({
+			status: "error",
+			error: err.message
+		});
+	}
+};

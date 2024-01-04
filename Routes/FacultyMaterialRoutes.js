@@ -1,8 +1,16 @@
 import express from "express";
-import {GetFacultyMaterials, UploadFacultyMaterials} from "../Controller/FacultyMaterialController.js";
-import {FacultyUploadVerification} from "../Middlewares/AuthVerification.js";
+import {
+	DeleteFacultyMaterials,
+	GetFacultyMaterials,
+	UploadFacultyMaterials
+} from "../Controller/FacultyMaterialController.js";
+import {
+	FacultyDeleteMiddleware,
+	FacultyUploadVerification
+} from "../Middlewares/AuthVerification.js";
 
-const FacultyModel = express.Router();
+const FacultyMaterialRoutes = express.Router();
 
-FacultyModel.route('/').post(FacultyUploadVerification, UploadFacultyMaterials).get(GetFacultyMaterials);
-export default FacultyModel;
+FacultyMaterialRoutes.route('/').post(FacultyUploadVerification, UploadFacultyMaterials).get(GetFacultyMaterials);
+FacultyMaterialRoutes.route('/:facultyId/:subject/:class/:linkId').delete(FacultyDeleteMiddleware, DeleteFacultyMaterials);
+export default FacultyMaterialRoutes;

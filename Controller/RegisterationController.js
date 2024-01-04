@@ -46,6 +46,7 @@ export const AddFaculty = async (req, res) => {
 }
 
 export const LoginFaculty = async (req, res) => {
+	console.log(decrypt("d0a9e0b0abbe1b724494d5bf42932b00"))
 	const body = req.body;
 	try {
 		const data = await RegisterationModel.findOne({ email: body.email });
