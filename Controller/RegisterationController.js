@@ -45,6 +45,24 @@ export const AddFaculty = async (req, res) => {
 	}
 }
 
+export const updateFacultyAssignedClasses = async (req, res) => {
+	try{
+		const data = await RegisterationModel.findById(req.params.id);
+		const classes = req.body.facultyAssignedClasses;
+		console.log(data, classes)
+		data.assignedClasses = data.assignedClasses.concat(classes);
+		await data.save();
+		res.status(200).json({
+			status: "success",
+			data
+		})
+	}catch(err){
+		res.status(404).json({
+			status: "error",
+			error: err.message
+		})
+	}
+}
 export const LoginFaculty = async (req, res) => {
 	console.log(decrypt("d0a9e0b0abbe1b724494d5bf42932b00"))
 	const body = req.body;
