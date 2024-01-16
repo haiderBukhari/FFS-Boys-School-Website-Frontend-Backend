@@ -7,7 +7,7 @@ import LoginRoutes from "./Routes/LoginRoutes.js"
 import FacultyMaterialRoutes from "./Routes/FacultyMaterialRoutes.js";
 import FacultyRoutes from "./Routes/FacultyRoutes.js";
 import {AddRating} from "./Controller/FeedbackController.js";
-import axios from "axios"
+import PrincipalRoutes from "./Routes/PrincipalRoutes.js";
 
 
 const app = express()
@@ -24,6 +24,7 @@ app.use('/login', LoginRoutes);
 app.use('/faculty', FacultyMaterialRoutes);
 app.use('/getFaculty', FacultyRoutes);
 app.post('/feedback', AddRating);
+app.use('/principal', PrincipalRoutes);
 app.use('*', (req, res) =>{
     res.status(400).json({
         status: 'error',
