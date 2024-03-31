@@ -1,5 +1,6 @@
 import {PrincipalModel} from '../Model/PrincipalModel.js'
 import {SendPrinicpalEmail} from "../utils/WriteToPrincipalEmail.js";
+import multer from "multer"
 
 
 export const WriteToPrincipal = async (req, res) => {
@@ -9,7 +10,8 @@ export const WriteToPrincipal = async (req, res) => {
 	const className = req.body.className
 	const message = req.body.message
 
-		SendPrinicpalEmail(name, emailId, mobile, className, message)
+	SendPrinicpalEmail(name, emailId, mobile, className, message)
+
 	try{
 		const data = await PrincipalModel.create({
 			name: name,
@@ -17,6 +19,40 @@ export const WriteToPrincipal = async (req, res) => {
 			phone: mobile,
 			class: className,
 			message: message
+		})
+		res.status(200).json({
+			status: "success",
+			data
+		})
+	}catch(err){
+		res.status(400).json({
+			status: "failed",
+			message: err.message
+		})
+	}
+}
+
+export const WriteToPrincipalbyAudio = async (req, res) => {
+	let audio = null;
+	if(req?.file?.buffer){
+		audio = req?.file?.buffer;
+	}
+	const name = req.body.name
+	const emailId = req.body.email
+	const mobile = req.body.mobile
+	const className = req.body.className
+	const message = req.body.message
+
+	SendPrinicpalEmail(name, emailId, mobile, className, message)
+
+	try{
+		const data = await PrincipalModel.create({
+			name: name,
+			email: emailId,
+			phone: mobile,
+			class: className,
+			message: message,
+			audio: audio
 		})
 		res.status(200).json({
 			status: "success",
@@ -44,6 +80,7 @@ export const GetPrincipalResponses = async (req, res) => {
 		else{
 			data = await PrincipalModel.find({}).skip(skip).limit(limit).sort({date: -1});
 		}
+
 		res.status(200).json({
 			status: "success",
 			data,

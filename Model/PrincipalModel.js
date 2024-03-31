@@ -8,9 +8,15 @@ const PrincipalScheme = mongoose.Schema({
 	class: String,
 	message: String,
 	date: Date,
+	audio: {
+		type: {
+			data: Buffer,
+			type: String
+		},
+	},
 	actionTaken: {
 		type: Boolean,
-		default: false
+		default: false,
 	}
 })
 
