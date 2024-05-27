@@ -14,10 +14,7 @@ const upload = multer();
 const app = express()
 app.use(express.json())
 app.use(morgan('dev'))
-app.use(cors({
-    origin: ["http://localhost:3000", "https://www.ffsboyswah.com"],
-    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE']
-}))
+app.use(cors())
 
 app.use('/contact', ContactRoutes);
 app.use('/register', RegisterationRoutes);
