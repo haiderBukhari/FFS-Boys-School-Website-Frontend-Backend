@@ -5,4 +5,5 @@ const FacultyRoutes = express.Router();
 
 FacultyRoutes.route('/').get(getAllFacultyByClassandSubject);
 
+
 export default FacultyRoutes;
