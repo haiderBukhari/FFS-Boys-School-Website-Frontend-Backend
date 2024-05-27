@@ -46,23 +46,42 @@ export const AddFaculty = async (req, res) => {
 }
 
 export const updateFacultyAssignedClasses = async (req, res) => {
-	try{
-		const data = await RegisterationModel.findById(req.params.id);
-		const classes = req.body.facultyAssignedClasses;
-		console.log(data, classes)
-		data.assignedClasses = data.assignedClasses.concat(classes);
-		await data.save();
-		res.status(200).json({
-			status: "success",
-			data
-		})
-	}catch(err){
-		res.status(404).json({
-			status: "error",
-			error: err.message
-		})
-	}
-}
+    try {
+        const data = await RegisterationModel.findById(req.params.id);
+        const classesToAdd = req.body.facultyAssignedClasses;
+        console.log(data, classesToAdd);
+
+        // Update existing classes and add new classes
+        for (const classToAdd of classesToAdd) {
+            const existingClassIndex = data.assignedClasses.findIndex(existingClass => existingClass.class === classToAdd.class && existingClass.subjects.toString() === classToAdd.subjects.toString());
+            
+            if (existingClassIndex !== -1) {
+                // Update existing class
+                data.assignedClasses[existingClassIndex] = classToAdd;
+            } else {
+                // Add new class
+                data.assignedClasses.push(classToAdd);
+            }
+        }
+
+        // Remove classes that are not present in the request
+        data.assignedClasses = data.assignedClasses.filter(existingClass => {
+            return classesToAdd.some(classToAdd => classToAdd.class === existingClass.class && classToAdd.subjects.toString() === existingClass.subjects.toString());
+        });
+
+        await data.save();
+        res.status(200).json({
+            status: "success",
+            data
+        });
+    } catch (err) {
+        res.status(404).json({
+            status: "error",
+            error: err.message
+        });
+    }
+};
+
 export const LoginFaculty = async (req, res) => {
 	console.log(decrypt("d0a9e0b0abbe1b724494d5bf42932b00"))
 	const body = req.body;
@@ -176,4 +195,3 @@ export const GetFacultyById = async (req, res) => {
 		})
 	}
 }
-

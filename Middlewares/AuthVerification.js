@@ -1,6 +1,7 @@
 import {verifyUser} from "../Controller/AuthVerificationController.js";
 
 export const FacultyUploadVerification = (req, res, next) => {
+	console.log(req.body.facultyId)
 	if(!req.body.facultyId || !req.body.subject || !req.body.class){
 		return res.status(404).json({
 			status: "failed",

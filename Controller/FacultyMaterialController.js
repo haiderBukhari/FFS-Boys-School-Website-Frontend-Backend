@@ -2,6 +2,7 @@ import FacultyMaterialsModel from "../Model/FacultyMaterialsModel.js";
 import mongoose from "mongoose"
 import RegisterationModel from "../Model/RegisterationModel.js";
 export const UploadFacultyMaterials = async (req, res) => {
+	// console.log(req.body.location)
 	try {
 		const FacultyData = await FacultyMaterialsModel.findOne({
 			facultyId: req.body.facultyId,
@@ -18,8 +19,9 @@ export const UploadFacultyMaterials = async (req, res) => {
 				link: [{
 					title: req.body.title,
 					link: req.body.link,
-					description: req.body.description,
-					isDriveData: req.body.isDriveData,
+					description: req.body.description || '',
+					isLink: req.body.isLink,
+					isMeetingLink: req.body.isMeetingLink,
 					uploadedDate: Date.now()
 				}]
 			});

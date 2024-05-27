@@ -20,7 +20,22 @@ const FacultyMaterialSchema = new mongoose.Schema({
 			title: String,
 			link: String,
 			description: String,
-			isDriveData: Boolean,
+			isMeetingLink: {
+				type: Boolean,
+				defult: false
+			},
+			isDocument: {
+				type: Boolean,
+				defult: false
+			},
+			isVideo: {
+				type: Boolean,
+				defult: false
+			},
+			isLink: {
+				type: Boolean,
+				defult: false
+			},
 			uploadedDate: {
 				type: Date,
 				default: Date.now,
